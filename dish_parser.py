@@ -12,7 +12,8 @@ def dish_parser(message_from_chief):
     #       "Борщ 4
     #       Макароны 3
     #       Сырный суп 2".
-    # Мы разделим сообщение на список из строк.
+    # Мы разделим сообщение на список из строк и преобразуем всё к нижнему регистру.
+    message_from_chief = message_from_chief.lower()
     message_from_chief_divided = message_from_chief.split('\n')
 
     # to_cook - словарь из пар "название блюда - количество блюда"
@@ -66,6 +67,4 @@ def dish_parser(message_from_chief):
             # то добавляем всю строку, которая является названием блюда, и количество - 1
             add_dish(dish, 1)
 
-    # Возвращаем to_cook и repeated_dishes
     return to_cook, repeated_dishes
-    # Спасибо за внимание
