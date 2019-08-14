@@ -1,13 +1,17 @@
 from dish_parser import dish_parser
 from ingredients_calculator import ingredients_calculator
+from openpyxl import load_workbook
+from table_handler import first_blank_row_finder
 
 def find_unit(ingredient):
-    if ingredient == 'яйца':
-        return 'шт'
-    if ingredient == 'молоко':
-        return 'л'
-    else:
-        return 'г'
+    units = load_workbook(filename='units.xlsx')['Units']
+    units_first_blank_row = first_blank_row_finder(units, 1)
+    units_keys = [units.cell(row=i, column=1) for i in range(1, units_first_blank_row)]
+    for cell in units_keys:
+            if cell.value == ingredient:
+                a = cell.row
+                return units.cell(row=a,column=2).value
+    return 'г'
 
 def to_buy_handler(to_buy):
     answer = 'Чтобы приготовить эти блюда вам понадобится купить:'

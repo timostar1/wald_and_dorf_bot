@@ -1,10 +1,7 @@
 from openpyxl import load_workbook
+from save_numbers import read_numbers
+from table_handler import first_blank_row_finder
 
-def read_numbers():
-    with open('numbers.txt', 'r') as file:
-        string = file.read()
-        number_of_people, number_of_vegans = [int(i) for i in string.split("\n")]
-        return number_of_people, number_of_vegans
 number_of_people, number_of_vegans = read_numbers()
 
 def ingredients_calculator(to_cook):
@@ -28,17 +25,10 @@ def ingredients_calculator(to_cook):
     # Импорт таблицы с граммовками
     ingredients = load_workbook(filename='ingredients.xlsx')['Ingredients']
 
-    # Цикл ниже находит первую пустую строку в таблице
-    # и записывает её номер как first_blank_row
-    value = True
-    first_blank_row = 1
-    while value != None:
-        value = ingredients.cell(row=first_blank_row, column=3).value
-        first_blank_row += 1
-    first_blank_row -= 1
+    ingredients_first_blank_row = first_blank_row_finder(ingredients, 3)
 
     # В dish_names запишем все названия блюд
-    dish_names = [ingredients.cell(row=i, column=1) for i in range(1, first_blank_row)]
+    dish_names = [ingredients.cell(row=i, column=1) for i in range(1, ingredients_first_blank_row)]
 
     # Функция ниже находит нужное название блюда в списке dish_names и выдаёт его строку
     def search_dish(name):
@@ -52,7 +42,7 @@ def ingredients_calculator(to_cook):
     def search_next_dish(row):
         end = 1
         value = None
-        while (value == None) and (row + end <= first_blank_row):
+        while (value == None) and (row + end <= ingredients_first_blank_row):
             value = ingredients.cell(column=1, row=row+end).value
             end += 1
         return end
