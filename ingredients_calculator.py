@@ -1,5 +1,12 @@
 from openpyxl import load_workbook
 
+def read_numbers():
+    with open('numbers.txt', 'r') as file:
+        string = file.read()
+        number_of_people, number_of_vegans = [int(i) for i in string.split("\n")]
+        return number_of_people, number_of_vegans
+number_of_people, number_of_vegans = read_numbers()
+
 def ingredients_calculator(to_cook):
     '''
     :param to_cook:
@@ -63,7 +70,7 @@ def ingredients_calculator(to_cook):
             # умножим каждый ингредиент на число людей и количество блюда
             for i in range(row, row + search_next_dish(row) - 1):
                 ingredient = ingredients.cell(column=2,row=i).value
-                quantity = ingredients.cell(column=3,row=i).value * to_cook[dish]
+                quantity = ingredients.cell(column=3,row=i).value * to_cook[dish] * number_of_people
                 if ingredient in to_buy:
                     # Если этот ингредиент уже есть в словаре
                     # Мы сложим количество этого ингредиента с уже имеющимся
